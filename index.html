@@ -216,7 +216,7 @@
                 height: 100%;
                 flex-direction: row;
                 flex-wrap: nowrap;
-                overflow-y: auto;
+                overflow-y: hidden;
                 scroll-snap-type: x mandatory;
                 scroll-behavior: smooth;
                 -webkit-overflow-scrolling: touch;
@@ -227,7 +227,6 @@
             .slide {
                 scroll-snap-align: start;
             }
-
 
             .nav {
                 position: absolute;
@@ -240,53 +239,39 @@
                 font-size: 24px;
             }
 
-
             .prev { left: 10px; }
             .next { right: 10px; }
 
         </style>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                console.log("DOMContentLoaded");
                 const width = window.innerWidth;
                 const height = window.innerHeight;
 
                 const orientation = width > height ? "landscape" : "portrait";
-                console.log(orientation);
+                
                 //add a class to the body based on the orientation
                 document.body.classList.add(orientation);
 
-                let currentSlide = 0;
                 const slides = document.querySelectorAll('.slide');
                 const totalSlides = slides.length;
+ 
+                const percentage = 100 / totalSlides;
 
-                function showSlide(index) {
-                    currentSlide = index;
-                    slides.forEach((slide, i) => {
-                        if(i === index) {
-                            slide.classList.add('active');
-                        } else {
-                            slide.classList.remove('active');
-                        }
+                document.querySelector('.prev').addEventListener('click', (x) => {
+
+                    document.querySelector('.slides').scrollBy({
+                        left: -percentage,
+                        behavior: 'smooth'
                     });
-                }
-                
-                function prevSlide() {
-                    let prevSlide = (currentSlide === 0)? totalSlides-1 : currentSlide - 1;
-                    console.log(prevSlide);
-                    showSlide(prevSlide);
-                }
+                });
+                document.querySelector('.next').addEventListener('click', (x) => {
+                    document.querySelector('.slides').scrollBy({
+                        left: percentage,
+                        behavior: 'smooth'
+                    });
+                });
 
-                function nextSlide() {
-                    let nextSlide = (currentSlide === totalSlides-1)? 0 : currentSlide + 1;
-                    console.log(nextSlide);
-                    showSlide(nextSlide);
-                }
-                
-                document.querySelector('.prev').addEventListener('click', prevSlide);
-                document.querySelector('.next').addEventListener('click', nextSlide);
-
-                showSlide(currentSlide);
 
             });
         </script>
