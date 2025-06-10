@@ -195,15 +195,150 @@
                 --f7-sheet-bg-color: transparent;
             }
 
+            /* Carousel */
+            .carousel {
+                position: relative;
+                margin: auto;
+                overflow:auto;
+                border-radius: 10px;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            }
 
+            .slider {
+                width: 50%;
+                text-align: center;
+                overflow: hidden;
+            }
 
+            .slides {
+                display: flex;
+                
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                
+                
+                
+                scroll-behavior: smooth;
+                -webkit-overflow-scrolling: touch;
+                
+                /*
+                scroll-snap-points-x: repeat(50%);
+                scroll-snap-type: mandatory;
+                */
+            }
+            .slides::-webkit-scrollbar {
+                width: 10px;
+                height: 10px;
+            }
+            .slides::-webkit-scrollbar-thumb {
+                background: black;
+                border-radius: 10px;
+            }
+            .slides::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            .slides {
+                display: flex;
+                width: 50%;
+                margin-left: auto;
+                margin-right: auto;
+                transition: transform 0.5s ease-in-out;
+            }
+
+            .slide {
+                min-width: 100%;
+                transition: opacity 0.5s ease;
+            }
+
+            img {
+                width: 100%;
+                height: auto;
+                display: block;
+            }
+
+            .nav {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                background: rgba(0,0,0,0.5);
+                border: none;
+                color: white;
+                padding: 10px;
+                cursor: pointer;
+                z-index: 2;
+                font-size: 24px;
+            }
+
+            .prev { left: 10px; }
+            .next { right: 10px; }
 
         </style>
         <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log("DOMContentLoaded");
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+
+                const orientation = width > height ? "landscape" : "portrait";
+                console.log(orientation);
+                //add a class to the body based on the orientation
+                document.body.classList.add(orientation);
+
+                let currentSlide = 0;
+                const slides = document.querySelectorAll('.slide');
+                const totalSlides = slides.length;
+
+                function showSlide(index) {
+                    currentSlide = index;
+                    slides.forEach((slide, i) => {
+                        slide.style.display = i === index ? 'block' : 'none';
+                    });
+                }
+                
+                function prevSlide() {
+                    let prevSlide = (currentSlide === 0)? totalSlides-1 : currentSlide - 1;
+                    console.log(prevSlide);
+                    showSlide(prevSlide);
+                }
+
+                function nextSlide() {
+                    let nextSlide = (currentSlide === totalSlides-1)? 0 : currentSlide + 1;
+                    console.log(nextSlide);
+                    showSlide(nextSlide);
+                }
+                
+                document.querySelector('.prev').addEventListener('click', prevSlide);
+                document.querySelector('.next').addEventListener('click', nextSlide);
+
+                showSlide(currentSlide);
+
+            });
         </script>
     </head>
-    <body data-sveltekit-preload-data="tap" style="margin: 0; background: black">
-         
+    <body style="margin: 0;">
+        <div class="container">
+            <div class="carousel">
+                <div class="slides">
+                    <div class="slide">
+                        <img src="slide-1.png" alt="Slide 1">
+                    </div>
+                    <div class="slide">
+                        <img src="slide-2.png" alt="Slide 2">
+                    </div>
+                    <div class="slide">
+                        <img src="slide-3.png" alt="Slide 3">
+                    </div>
+                </div>
+                <button class="nav prev">❮</button>
+                <button class="nav next">❯</button>
+            </div>
+            <div class="slide-indicators">
+                <div class="indicator"></div>
+                <div class="indicator"></div>
+                <div class="indicator"></div>
+            </div>
+        </div>        
 
 
 
