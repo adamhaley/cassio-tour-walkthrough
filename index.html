@@ -216,7 +216,7 @@
                 height: 100%;
                 flex-direction: row;
                 flex-wrap: nowrap;
-                overflow-y: hidden;
+                overflow-x: hidden;
                 scroll-snap-type: x mandatory;
                 scroll-behavior: smooth;
                 -webkit-overflow-scrolling: touch;
@@ -239,6 +239,7 @@
                 font-size: 24px;
             }
 
+            .nav.hidden { border: 1px solid blue;  }
             .prev { left: 10px; }
             .next { right: 10px; }
 
@@ -258,18 +259,38 @@
  
                 const percentage = 100 / totalSlides;
 
-                document.querySelector('.prev').addEventListener('click', (x) => {
+                let prevButton = document.querySelector('.prev');
+                let nextButton = document.querySelector('.next');
 
-                    document.querySelector('.slides').scrollBy({
-                        left: -percentage,
+                let scrollTo = function(position){
+                    if (position <= percentage) {
+                        prevButton.classList.add('hidden');
+                    }else{
+                        prevButton.classList.remove('hidden');
+                    }
+                    if (position >= (totalSlides - 1) * percentage) {
+                        nextButton.classList.add('hidden');
+                    }else{
+                        nextButton.classList.remove('hidden');
+                    }
+                    document.querySelector('.slides').scrollTo({
+                        left: position,
                         behavior: 'smooth'
                     });
+                }
+
+
+                document.querySelector('.prev').addEventListener('click', (x) => {
+                    console.log("prev");
+                    let newPosition = document.querySelector('.slides').scrollLeft - percentage;
+                    console.log(newPosition);
+                    scrollTo(newPosition);
                 });
                 document.querySelector('.next').addEventListener('click', (x) => {
-                    document.querySelector('.slides').scrollBy({
-                        left: percentage,
-                        behavior: 'smooth'
-                    });
+                    console.log("next");
+                    let newPosition = document.querySelector('.slides').scrollLeft + percentage;
+                    console.log(newPosition);
+                    scrollTo(newPosition);
                 });
 
 
