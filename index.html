@@ -262,7 +262,7 @@
                 let prevButton = document.querySelector('.prev');
                 let nextButton = document.querySelector('.next');
 
-                let scrollTo = function(position){
+                let scrollToPosition = function(position){
                     if (position <= percentage) {
                         prevButton.classList.add('hidden');
                     }else{
@@ -284,13 +284,13 @@
                     console.log("prev");
                     let newPosition = document.querySelector('.slides').scrollLeft - percentage;
                     console.log(newPosition);
-                    scrollTo(newPosition);
+                    scrollToPosition(newPosition);
                 });
                 document.querySelector('.next').addEventListener('click', (x) => {
                     console.log("next");
                     let newPosition = document.querySelector('.slides').scrollLeft + percentage;
                     console.log(newPosition);
-                    scrollTo(newPosition);
+                    scrollToPosition(newPosition);
                 });
 
 
