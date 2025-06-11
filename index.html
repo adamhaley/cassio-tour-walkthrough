@@ -216,7 +216,7 @@
                 height: 100%;
                 flex-direction: row;
                 flex-wrap: nowrap;
-                overflow-x: hidden;
+                overflow-x: auto;
                 scroll-snap-type: x mandatory;
                 scroll-behavior: smooth;
                 -webkit-overflow-scrolling: touch;
@@ -239,7 +239,7 @@
                 font-size: 24px;
             }
 
-            .nav.hidden { border: 1px solid blue;  }
+            .nav.hidden { display: none; }
             .prev { left: 10px; }
             .next { right: 10px; }
 
@@ -254,46 +254,50 @@
                 //add a class to the body based on the orientation
                 document.body.classList.add(orientation);
 
-                const slides = document.querySelectorAll('.slide');
-                const totalSlides = slides.length;
- 
-                const percentage = 100 / totalSlides;
-
                 let prevButton = document.querySelector('.prev');
                 let nextButton = document.querySelector('.next');
 
-                let scrollToPosition = function(position){
-                    if (position <= percentage) {
+                let slideWidth = document.querySelector('.slide').offsetWidth;
+                
+                let handleButtonVisibility = function(){
+                    let slidesDiv = document.querySelector('.slides');
+                    let position = slidesDiv.scrollLeft;
+                    let scrollWidth = slidesDiv.scrollWidth;
+
+                    if (position <= slideWidth) {
                         prevButton.classList.add('hidden');
                     }else{
                         prevButton.classList.remove('hidden');
                     }
-                    if (position >= (totalSlides - 1) * percentage) {
+                    if (position >= (scrollWidth * .33) * 2) {
                         nextButton.classList.add('hidden');
                     }else{
                         nextButton.classList.remove('hidden');
                     }
-                    document.querySelector('.slides').scrollTo({
-                        left: position,
-                        behavior: 'smooth'
-                    });
                 }
 
-
                 document.querySelector('.prev').addEventListener('click', (x) => {
-                    console.log("prev");
-                    let newPosition = document.querySelector('.slides').scrollLeft - percentage;
-                    console.log(newPosition);
-                    scrollToPosition(newPosition);
+                    let position = document.querySelector('.slides').scrollLeft;
+                    let newPosition =  position <= slideWidth ? 0 : position - slideWidth;
+                    document.querySelector('.slides').scrollTo({
+                        left: newPosition,
+                        behavior: 'smooth'
+                    });
                 });
+
                 document.querySelector('.next').addEventListener('click', (x) => {
-                    console.log("next");
-                    let newPosition = document.querySelector('.slides').scrollLeft + percentage;
-                    console.log(newPosition);
-                    scrollToPosition(newPosition);
+                    let position = document.querySelector('.slides').scrollLeft;
+                    let newPosition = position >= (2 * slideWidth) ? position :  position + slideWidth;
+                    document.querySelector('.slides').scrollTo({
+                        left: newPosition,
+                        behavior: 'smooth'
+                    });
+
                 });
 
+                document.querySelector('.slides').addEventListener('scrollend', handleButtonVisibility);
 
+                handleButtonVisibility();
             });
         </script>
     </head>
